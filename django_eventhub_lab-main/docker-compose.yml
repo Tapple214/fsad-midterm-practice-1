@@ -1,0 +1,10 @@
+services:
+  web:
+    build: .
+    container_name: eventhub_web
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    # TODO: Add environment variables if needed.

@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>EventHub</h1>
+
+<!-- TODO: Filtering task:
+     Build a GET form for category and status. -->
+
+{% if user.is_authenticated %}
+<p>Welcome, {{ user.username }}!</p>
+{% endif %}
+
+{% for event in events %}
+<article>
+    <!-- TODO: Display event title and link to detail. -->
+    <!-- TODO: Display category, date, location, status, capacity. -->
+
+    {% if user.is_authenticated %}
+        <!-- TODO: Add a POST registration form with CSRF protection. -->
+    {% endif %}
+
+    {% if perms.events.change_event %}
+        <!-- TODO: Show Edit link. -->
+    {% endif %}
+
+    {% if perms.events.delete_event %}
+        <!-- TODO: Show Delete link/form. -->
+    {% endif %}
+</article>
+<hr>
+{% empty %}
+<p>No events found.</p>
+{% endfor %}
+{% endblock %}

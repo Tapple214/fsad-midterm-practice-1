@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+{% if event %}
+<h1>{{ event.title }}</h1>
+
+<!-- TODO: Display description, category, organizer, location,
+     event date, status, and capacity. -->
+
+{% if user.is_authenticated %}
+<!-- TODO: Create a POST registration form and include CSRF token. -->
+{% else %}
+<p>Login to register.</p>
+{% endif %}
+
+<h2>Registrations</h2>
+<ul>
+{% for registration in registrations %}
+    <!-- TODO: Display registration.user.username. -->
+{% empty %}
+    <li>No registrations yet.</li>
+{% endfor %}
+</ul>
+
+{% else %}
+<p>Event not found.</p>
+{% endif %}
+{% endblock %}

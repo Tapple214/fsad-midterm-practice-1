@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head><title>EventHub</title></head>
+<body>
+<nav>
+<a href="{% url 'events:event_list' %}">EventHub</a>
+{% if user.is_authenticated %}
+<span>Logged in as {{ user.username }}</span>
+<a href="{% url 'events:logout' %}">Logout</a>
+{% if perms.events.add_event %}<a href="{% url 'events:create_event' %}">Create Event</a>{% endif %}
+{% else %}
+<a href="{% url 'events:login' %}">Login</a>
+{% endif %}
+</nav>
+<hr>
+{% block content %}{% endblock %}
+</body>
+</html>

@@ -2,8 +2,21 @@
 {% block content %}
 <h1>EventHub</h1>
 
-<!-- TODO: Filtering task:
-     Build a GET form for category and status. -->
+<form method="get">
+    <select name="category">
+        <option value="">All Categories</option>
+        {% for cat in categories %}
+        <option value="{{ cat.id }}" {% if request.GET.category == cat.id|stringformat:"s" %}selected{% endif %}>{{ cat.name }}</option>
+        {% endfor %}
+    </select>
+    <select name="status">
+        <option value="">All Statuses</option>
+        <option value="upcoming" {% if request.GET.status == "upcoming" %}selected{% endif %}>Upcoming</option>
+        <option value="ongoing" {% if request.GET.status == "ongoing" %}selected{% endif %}>Ongoing</option>
+        <option value="finished" {% if request.GET.status == "finished" %}selected{% endif %}>Finished</option>
+    </select>
+    <button type="submit">Filter</button>
+</form>
 
 {% if user.is_authenticated %}
 <p>Welcome, {{ user.username }}!</p>
@@ -11,19 +24,22 @@
 
 {% for event in events %}
 <article>
-    <!-- TODO: Display event title and link to detail. -->
-    <!-- TODO: Display category, date, location, status, capacity. -->
+    <h2><a href="{% url 'events:event_detail' event.id %}">{{ event.title }}</a></h2>
+    <p>Category: {{ event.category.name }} | Date: {{ event.event_date }} | Location: {{ event.location }} | Status: {{ event.status }} | Capacity: {{ event.capacity }}</p>
 
     {% if user.is_authenticated %}
-        <!-- TODO: Add a POST registration form with CSRF protection. -->
+        <form method="post" action="{% url 'events:register_event' event.id %}">
+            {% csrf_token %}
+            <button type="submit">Register</button>
+        </form>
     {% endif %}
 
     {% if perms.events.change_event %}
-        <!-- TODO: Show Edit link. -->
+        <a href="{% url 'events:edit_event' event.id %}">Edit</a>
     {% endif %}
 
     {% if perms.events.delete_event %}
-        <!-- TODO: Show Delete link/form. -->
+        <a href="{% url 'events:delete_event' event.id %}">Delete</a>
     {% endif %}
 </article>
 <hr>

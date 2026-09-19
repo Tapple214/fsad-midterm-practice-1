@@ -4,84 +4,59 @@ from django.shortcuts import get_object_or_404, redirect, render
 from .models import Category, Event, Registration
 
 def event_list(request):
-    events = Event.objects.all().order_by("event_date")
-    category = request.GET.get("category")
-    status = request.GET.get("status")
-    if category:
-        events = events.filter(category_id=category)
-    if status:
-        events = events.filter(status=status)
-    categories = Category.objects.all()
-    return render(request, "events/event_list.html", {"events": events, "categories": categories})
+    # TODO: Query Event objects with the ORM.
+    # Order by event_date.
+    # Optionally filter by GET parameters:
+    # category and status.
+    events=[]
+    # TODO: Query all Category objects for the filter form.
+    return render(request,"events/event_list.html",{"events":events})
 
-def event_detail(request, event_id):
-    event = get_object_or_404(Event, id=event_id)
-    registrations = event.registrations.all()
-    return render(request, "events/event_detail.html", {
-        "event": event, "registrations": registrations
+def event_detail(request,event_id):
+    # TODO: Retrieve the Event with get_object_or_404().
+    event=None
+    # TODO: Retrieve event.registrations.all().
+    registrations=[]
+    return render(request,"events/event_detail.html",{
+        "event":event,"registrations":registrations
     })
 
 @login_required
-def register_event(request, event_id):
-    event = get_object_or_404(Event, id=event_id)
-    if request.method == "POST":
-        if not Registration.objects.filter(event=event, user=request.user).exists():
-            Registration.objects.create(event=event, user=request.user)
-    return redirect("events:event_detail", event_id=event_id)
+def register_event(request,event_id):
+    # TODO: Retrieve the event.
+    # TODO: Only register on POST.
+    # TODO: Use request.user.
+    # TODO: Prevent duplicate registrations.
+    return redirect("events:event_detail",event_id=event_id)
 
-@permission_required("events.add_event", raise_exception=True)
+@permission_required("events.add_event",raise_exception=True)
 def create_event(request):
-    categories = Category.objects.all()
-    if request.method == "POST":
-        Event.objects.create(
-            title=request.POST["title"],
-            description=request.POST.get("description", ""),
-            location=request.POST["location"],
-            event_date=request.POST["event_date"],
-            category_id=request.POST["category"],
-            status=request.POST.get("status", "upcoming"),
-            capacity=int(request.POST.get("capacity", 50)),
-            organizer=request.user,
-        )
-        return redirect("events:event_list")
-    return render(request, "events/event_form.html", {"categories": categories})
+    # TODO: On GET, show categories.
+    # TODO: On POST, create Event using request.POST and request.user.
+    return render(request,"events/event_form.html")
 
-@permission_required("events.change_event", raise_exception=True)
-def edit_event(request, event_id):
-    event = get_object_or_404(Event, id=event_id)
-    categories = Category.objects.all()
-    if request.method == "POST":
-        event.title = request.POST["title"]
-        event.description = request.POST.get("description", "")
-        event.location = request.POST["location"]
-        event.event_date = request.POST["event_date"]
-        event.category_id = request.POST["category"]
-        event.status = request.POST.get("status", event.status)
-        event.capacity = int(request.POST.get("capacity", event.capacity))
-        event.save()
-        return redirect("events:event_detail", event_id=event_id)
-    return render(request, "events/event_form.html", {"event": event, "categories": categories})
+@permission_required("events.change_event",raise_exception=True)
+def edit_event(request,event_id):
+    # TODO: Retrieve event.
+    # TODO: On POST, update fields and save().
+    return render(request,"events/event_form.html")
 
-@permission_required("events.delete_event", raise_exception=True)
-def delete_event(request, event_id):
-    event = get_object_or_404(Event, id=event_id)
-    if request.method == "POST":
-        event.delete()
-        return redirect("events:event_list")
-    return render(request, "events/delete_event.html", {"event": event})
+@permission_required("events.delete_event",raise_exception=True)
+def delete_event(request,event_id):
+    # TODO: Retrieve event.
+    # TODO: Delete only after POST.
+    return redirect("events:event_list")
 
 def user_login(request):
-    error = None
-    if request.method == "POST":
-        username = request.POST["username"]
-        password = request.POST["password"]
-        user = authenticate(request, username=username, password=password)
-        if user:
-            login(request, user)
-            return redirect("events:event_list")
-        error = "Invalid username or password."
-    return render(request, "events/login.html", {"error": error})
+    # TODO: Authentication task:
+    # 1. Check POST.
+    # 2. Read username/password.
+    # 3. Call authenticate().
+    # 4. If successful, call login(request,user).
+    # 5. Redirect to event_list.
+    # 6. Otherwise show an error.
+    return render(request,"events/login.html")
 
 def user_logout(request):
-    logout(request)
+    # TODO: Call logout(request), then redirect to login.
     return redirect("events:login")

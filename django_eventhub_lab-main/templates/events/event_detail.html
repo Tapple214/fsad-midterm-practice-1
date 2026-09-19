@@ -3,19 +3,11 @@
 {% if event %}
 <h1>{{ event.title }}</h1>
 
-<p>{{ event.description }}</p>
-<p>Category: {{ event.category.name }}</p>
-<p>Organizer: {{ event.organizer.username }}</p>
-<p>Location: {{ event.location }}</p>
-<p>Date: {{ event.event_date }}</p>
-<p>Status: {{ event.status }}</p>
-<p>Capacity: {{ event.capacity }}</p>
+<!-- TODO: Display description, category, organizer, location,
+     event date, status, and capacity. -->
 
 {% if user.is_authenticated %}
-<form method="post" action="{% url 'events:register_event' event.id %}">
-    {% csrf_token %}
-    <button type="submit">Register</button>
-</form>
+<!-- TODO: Create a POST registration form and include CSRF token. -->
 {% else %}
 <p>Login to register.</p>
 {% endif %}
@@ -23,7 +15,7 @@
 <h2>Registrations</h2>
 <ul>
 {% for registration in registrations %}
-    <li>{{ registration.user.username }}</li>
+    <!-- TODO: Display registration.user.username. -->
 {% empty %}
     <li>No registrations yet.</li>
 {% endfor %}
